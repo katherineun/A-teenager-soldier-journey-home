@@ -15,7 +15,7 @@ body{background:#050505;color:#eee;font-family:Georgia,serif;overflow:hidden;hei
 #blood{background:radial-gradient(circle,transparent 25%,rgba(150,0,0,.8) 100%);opacity:0;z-index:4;transition:opacity .8s}
 #sub{position:absolute;bottom:13%;width:100%;text-align:center;font-size:clamp(20px,3vw,34px);letter-spacing:.06em;text-shadow:0 2px 14px #000;opacity:0;transition:opacity 1.2s;z-index:6;pointer-events:none}
 #bar{position:absolute;bottom:0;left:0;height:4px;width:0;background:#ffb347;z-index:6;box-shadow:0 0 12px #ffb347}
-#photo{position:absolute;top:22px;left:22px;width:96px;height:96px;z-index:6;border:3px solid #d8cdb4;box-shadow:0 6px 20px #000;transform:rotate(-4deg)}
+#photo{opacity:0;transition:opacity .4s;position:absolute;top:22px;left:22px;width:96px;height:96px;z-index:6;border:3px solid #d8cdb4;box-shadow:0 6px 20px #000;transform:rotate(-4deg)}
 #cam{position:absolute;bottom:18px;right:18px;width:176px;height:132px;z-index:6;border:1px solid #555;border-radius:6px;overflow:hidden;opacity:.85}
 #cam video,#cam canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
 #hpb{position:absolute;z-index:7;pointer-events:none;transform:translate(-50%,-130%);display:flex;align-items:center;gap:4px;padding:5px 8px;background:#000b;border:1px solid #fff5;border-radius:5px;font:700 10px Arial;letter-spacing:.15em;color:#ddd}
@@ -27,7 +27,7 @@ h1{font-size:clamp(34px,6vw,70px);letter-spacing:.3em;font-weight:400;margin-bot
 p.s{max-width:520px;line-height:1.7;color:#bbb;margin-bottom:26px;font-family:Arial,sans-serif;font-size:15px}
 button{background:#e8dcc4;color:#111;border:0;padding:14px 34px;font:700 14px Arial;letter-spacing:.14em;cursor:pointer;border-radius:4px}
 .hand{font-size:42px;margin:6px 0 18px;animation:cr 1s infinite alternate}@keyframes cr{to{transform:translateY(12px)}}
-#sig{display:none;background:#000;z-index:25;transition:opacity 2s}
+#sig{display:none;background:#000;z-index:25;transition:opacity .7s}
 #paper{position:relative;width:360px;height:250px;background:#d9cfb8;box-shadow:0 0 60px #0008;background-image:repeating-linear-gradient(#0000 0 22px,#0002 22px 24px);background-size:100% 100%}
 #paper svg{position:absolute;left:22px;bottom:34px;width:190px;height:80px}
 #paper h3{font:700 14px Georgia,serif;letter-spacing:.1em;text-align:center;color:#222;margin:16px 16px 8px;padding-bottom:8px;border-bottom:2px solid #222}
@@ -92,7 +92,7 @@ plane(d){const c=this.ctx,o=c.createOscillator(),o2=c.createOscillator(),v=c.cre
  o.connect(f);o2.connect(f);f.connect(v);v.connect(p);p.connect(this.sfx);o.start(t);o2.start(t);o.stop(t+d);o2.stop(t+d);},
 warm(){[293.7,370,440,587.3,740].forEach((f,i)=>this.tone(f,f,.18,6,'sine',i*.6,this.m));this.droneG.gain.setTargetAtTime(.03,this.ctx.currentTime,1.5)},
 silence(){this.droneG.gain.setTargetAtTime(0,this.ctx.currentTime,.8);this.lp.frequency.setTargetAtTime(500,this.ctx.currentTime,.6)}};
-function say(t,r=.85){if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=r;u.pitch=.8;u.volume=.9;speechSynthesis.speak(u)}
+function say(){} /* spoken narration removed */
 /* ================= SCENE ================= */
 const cv=$('c'),rd=new THREE.WebGLRenderer({canvas:cv,antialias:true});rd.setPixelRatio(Math.min(devicePixelRatio,2));rd.setSize(innerWidth,innerHeight);
 rd.toneMapping=THREE.ACESFilmicToneMapping;rd.shadowMap.enabled=true;
@@ -171,7 +171,6 @@ const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:glowT,blending:THREE.A
 const roof=new THREE.Mesh(new THREE.ConeGeometry(4.1,2.4,4),new THREE.MeshStandardMaterial({color:0x8a4a30,roughness:.9}));roof.position.y=4.4;roof.rotation.y=Math.PI/4;home.add(roof);bx(.7,1.6,.7,wl,1.5,4.6,-.6);
 const lan=new THREE.Mesh(new THREE.SphereGeometry(.16,10,8),gl);lan.position.set(1.15,2.4,2.4);home.add(lan);const ll=new THREE.PointLight(0xffb45a,2.5,14);ll.position.set(1.15,2.4,3);home.add(ll);
 const il=new THREE.PointLight(0xff9a3c,8,16);il.position.set(0,1.8,1.2);home.add(il);
-for(let i=-3;i<=3;i++)bx(.14,.8,.06,wh,i*.9,.4,5.6);bx(6.4,.08,.06,wh,0,.65,5.6);
 home.position.set(0,gy(hz),hz);sc.add(home);const beacon=new THREE.PointLight(0xffa04a,2.2,45);beacon.position.set(0,gy(hz)+3,hz+4);sc.add(beacon);
 const pfT=tex(64,64,g=>{const r=g.createRadialGradient(32,32,2,32,32,32);r.addColorStop(0,'rgba(210,200,185,.8)');r.addColorStop(1,'rgba(210,200,185,0)');g.fillStyle=r;g.fillRect(0,0,64,64)});
 const chim=[];for(let i=0;i<5;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:pfT,transparent:true,depthWrite:false}));s.userData.y0=gy(hz)+5.5;s.position.set(1.5,s.userData.y0+i*.8,hz-.6);sc.add(s);chim.push(s)}
@@ -219,7 +218,7 @@ function hit(){lives--;hp=Math.round(lives/3*100);photo();updHp();addT(.7);$('fl
  if(hp<=0)finish(false);else showSub(lives==2?'Keep moving.':'Mama...',true)}
 function finish(win){over=true;$('c').style.filter='';if(win){A.warm();hl.intensity=12;const f=$('flash');f.style.transition='opacity .4s';f.style.opacity=.5;setTimeout(()=>{f.style.transition='opacity 1.2s';f.style.opacity=0},450);
   setTimeout(()=>end('Leo made it home.','Millions of boys did not.'),4200)}
- else{A.silence();slow=.15;speechSynthesis.cancel();setTimeout(()=>end('Leo was eighteen.','He never made it home.'),4500)}}
+ else{A.silence();slow=.15;setTimeout(()=>end('Leo was eighteen.','He never made it home.'),4500)}}
 function end(a,b){A.stamp();$('e1').textContent=a;$('e2').textContent=b;const e=$('end');e.style.display='flex';requestAnimationFrame(()=>e.style.opacity=1)}
 $('again').onclick=()=>location.reload();
 /* ================= POSE ================= */
@@ -227,7 +226,7 @@ let pY={L:null,R:null};
 function onPose(r){const c=$('o'),g=c.getContext('2d');c.width=320;c.height=240;g.drawImage(r.image,0,0,320,240);
  if(r.poseLandmarks){drawConnectors(g,r.poseLandmarks,POSE_CONNECTIONS,{color:'#999',lineWidth:2});drawLandmarks(g,r.poseLandmarks,{color:'#ffb347',radius:3});
   [['L',15],['R',16]].forEach(([s,i])=>{const w=r.poseLandmarks[i];if(w&&w.visibility>.5){if(pY[s]!==null&&w.y-pY[s]>.03)pull(s);pY[s]=w.y}})}}
-$('go').onclick=()=>{$('start').style.display='none';const sg=$('sig');sg.style.display='flex';A.init();A.sign();sg.classList.add('go');setTimeout(()=>sg.classList.add('stamped'),2100);setTimeout(()=>{sg.style.opacity=0;active=true;setTimeout(()=>sg.style.display='none',2100)},3700);
+$('go').onclick=()=>{$('start').style.display='none';const sg=$('sig');sg.style.display='flex';A.init();A.sign();sg.classList.add('go');setTimeout(()=>sg.classList.add('stamped'),2100);setTimeout(()=>{sg.style.opacity=0;$('photo').style.opacity=1;active=true;setTimeout(()=>sg.style.display='none',800)},3200);
  try{const ps=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});ps.setOptions({modelComplexity:1,smoothLandmarks:true,minDetectionConfidence:.5,minTrackingConfidence:.5});ps.onResults(onPose);
  new Camera($('v'),{onFrame:async()=>{await ps.send({image:$('v')})},width:320,height:240}).start().catch(()=>$('cam').style.display='none')}catch(e){$('cam').style.display='none'}};
 /* ================= LOOP ================= */
